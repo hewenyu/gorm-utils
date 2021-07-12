@@ -13,7 +13,7 @@ var (
 	ModelWithHistory []interface{}
 )
 
-func init() {
+func SetUp() {
 	db = NewConnection()
 
 	sqlDirver, err := db.DB()
