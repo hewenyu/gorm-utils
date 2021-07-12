@@ -1,44 +1,56 @@
 package godriver
 
 import (
-	"fmt"
 	"log"
-	"os"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var (
-	DB               *gorm.DB
+	db               *gorm.DB
 	ModelWithHistory []interface{}
 )
 
-/*
-init 初始化
-*/
 func init() {
-	// export POSTGRES_HOST=localhost POSTGRES_USER=gorm POSTGRES_PWD=gorm POSTGRES_DB=gorm POSTGRES_PORT=9920 POSTGRES_SSLMODE=disable
-	db_url := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=%v TimeZone=Asia/Shanghai",
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PWD"),
-		os.Getenv("POSTGRES_DB"),
-		os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_SSLMODE"),
-	)
+	db = NewConnection()
 
-	DB = OpenPG(db_url)
+	sqlDirver, err := db.DB()
 
-	SetupDatabase(DB)
+	if err != nil {
+		log.Println(err.Error())
+	}
 
-	// return
+	sqlDirver.SetMaxIdleConns(10)                   //最大空闲连接数
+	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
+	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
+
+	// defer sqlDirver.Close()
 }
 
-/*
-open 链接PG数据库
-dsn "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-*/
+/**
+ * GetDB 获取db
+ */
+func GetDB() *gorm.DB {
+
+	sqlDirver, err := db.DB()
+
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	if err := sqlDirver.Ping(); err != nil {
+		sqlDirver.Close()
+		db = NewConnection()
+	}
+	return db
+}
+
+/**
+ *open 链接PG数据库
+ *dsn "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+ */
 func OpenPG(dsn string) (db *gorm.DB) {
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
@@ -54,7 +66,6 @@ func OpenPG(dsn string) (db *gorm.DB) {
 }
 
 func ResetDatabase(db *gorm.DB) {
-	//cleanDatabase(db)
 	CleanDatabase(db)
 	SetupDatabase(db)
 }

@@ -5,15 +5,16 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
 
-var db *gorm.DB
-
+/**
+ * POSTGRES
+ * 默认PG的配置文件
+ */
 type POSTGRES struct {
 	Name        string `json:"name"`         // 数据库名称
 	Password    string `json:"password"`     // 数据库密码
@@ -24,6 +25,10 @@ type POSTGRES struct {
 	SSLMODE     string `json:"ssl_mode"`     // ssl mode
 }
 
+/**
+ * NewPOSTGRES
+ * 初始化PG dsn
+ */
 func NewPOSTGRES() *POSTGRES {
 	return &POSTGRES{
 		Name:        os.Getenv("POSTGRES_DB"),
@@ -36,6 +41,10 @@ func NewPOSTGRES() *POSTGRES {
 	}
 }
 
+/**
+ * NewConnection
+ * 创建链接
+ */
 func (p *POSTGRES) NewConnection() *gorm.DB {
 	db_url := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=%v TimeZone=Asia/Shanghai",
 		p.Host,
@@ -65,42 +74,11 @@ func (p *POSTGRES) NewConnection() *gorm.DB {
 
 /**
  * NewConnection
- * 初始化
+ * 初始化 链接
  */
 func NewConnection() *gorm.DB {
 	_pg_config := NewPOSTGRES() // 初始化 pg
 	_db := _pg_config.NewConnection()
 
 	return _db
-}
-
-func init() {
-	db = NewConnection()
-
-	sqlDirver, err := db.DB()
-
-	if err != nil {
-		log.Println(err.Error())
-	}
-
-	sqlDirver.SetMaxIdleConns(10)                   //最大空闲连接数
-	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
-	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
-
-	// defer sqlDirver.Close()
-}
-
-func GetDB() *gorm.DB {
-
-	sqlDirver, err := db.DB()
-
-	if err != nil {
-		log.Println(err.Error())
-	}
-
-	if err := sqlDirver.Ping(); err != nil {
-		sqlDirver.Close()
-		db = NewConnection()
-	}
-	return db
 }
