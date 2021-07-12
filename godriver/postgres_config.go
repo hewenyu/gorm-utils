@@ -21,7 +21,7 @@ type POSTGRES struct {
 	User        string `json:"user"`         // 数据库用户
 	Host        string `json:"host"`         // host
 	Port        string `json:"port"`         // 端口
-	TablePrefix string `json:"table_prefix"` // 标前缀
+	TablePrefix string `json:"table_prefix"` // 表前缀
 	SSLMODE     string `json:"ssl_mode"`     // ssl mode
 }
 
