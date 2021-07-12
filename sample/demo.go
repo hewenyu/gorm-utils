@@ -26,6 +26,8 @@ func init() {
 	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
 	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
 
+	// defer sqlDirver.Close()
+
 	SetupDatabase(db)
 }
 
@@ -35,10 +37,10 @@ func NewConn() *gorm.DB {
 		Name:        "postgres",
 		User:        "postgres",
 		Host:        "localhost",
-		Password:    "5432",
-		Port:        "example",
+		Password:    "example",
+		Port:        "5432",
 		TablePrefix: "test_",
-		SSLMODE:     "string",
+		SSLMODE:     "disable",
 	}
 
 	return _pg_config.NewConnection()

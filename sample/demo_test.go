@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gofrs/uuid"
 	"gorm.io/gorm/clause"
 )
 
@@ -32,9 +33,13 @@ func Test_demo(t *testing.T) {
 	_db := GetDB()
 
 	for {
+		_uid, _ := uuid.NewV4()
 
+		_name := NonceStr()
 		_new_user := UserInfo{
-			Name: NonceStr(),
+			ID:        _uid,
+			Name:      _name,
+			CreatedAt: time.Now().Local(),
 		}
 
 		// 更新用户字段
@@ -43,11 +48,9 @@ func Test_demo(t *testing.T) {
 			DoUpdates: clause.AssignmentColumns([]string{"name"}), // column needed to be updated
 		}).Create(&_new_user)
 
-		db.Commit()
-
-		time.Sleep(time.Second * 10)
-
 		fmt.Println("db commit")
+
+		time.Sleep(time.Second)
 
 	}
 
