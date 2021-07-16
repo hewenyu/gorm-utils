@@ -59,6 +59,8 @@ func (p *MYSQL) NewConnection() *gorm.DB {
 		p.Loc,
 	)
 
+	log.Println(db_url)
+
 	conn, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       db_url, // data source name
 		DefaultStringSize:         256,    // default size for string fields
