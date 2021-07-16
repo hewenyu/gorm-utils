@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
+	_ "github.com/hewenyu/gorm-utils/config"
+
 	"github.com/hewenyu/gorm-utils/sample"
 	"github.com/hewenyu/gorm-utils/utils"
 	"gorm.io/gorm/clause"

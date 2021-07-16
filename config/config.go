@@ -6,9 +6,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-var configName = "global"
+const configName = "global"
 
 func init() {
+	set_viper()
+}
+
+func set_viper() {
 	viper.SetConfigName(configName) // name of config file (without extension)
 	viper.SetConfigType("yaml")     //REQUIRED if the config file does not have the extension in the name
 
@@ -24,4 +28,8 @@ func init() {
 		log.Fatal(err) // 读取配置文件失败致命错误
 	}
 
+}
+
+func GetConfigName() string {
+	return configName
 }

@@ -13,11 +13,16 @@ var (
 	modelWithHistory = []interface{}{&sample.UserInfo{}}
 )
 
+func init() {
+	db = NewConn()
+}
+
 func NewConn() *gorm.DB {
 	_pg_config := MYSQL{
 		Name:        viper.GetString("mysql.name"),
 		Password:    viper.GetString("mysql.password"),
 		User:        viper.GetString("mysql.user"),
+		Port:        viper.GetString("mysql.port"),
 		Host:        viper.GetString("mysql.host"),
 		TablePrefix: viper.GetString("mysql.table"),     // defult dev_
 		ParseTime:   viper.GetString("mysql.parsetime"), // defult True
