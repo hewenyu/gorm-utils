@@ -1,80 +1,72 @@
 package sample
 
-import (
-	"log"
-	"time"
+// var (
+// 	db               *gorm.DB
+// 	ModelWithHistory = []interface{}{&UserInfo{}}
+// )
 
-	"github.com/hewenyu/gorm-utils/godriver"
-	"gorm.io/gorm"
-)
+// func init() {
 
-var (
-	db               *gorm.DB
-	ModelWithHistory = []interface{}{&UserInfo{}}
-)
+// 	db = NewConn()
+// 	sqlDirver, err := db.DB()
 
-func init() {
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 	}
 
-	db = NewConn()
-	sqlDirver, err := db.DB()
+// 	sqlDirver.SetMaxIdleConns(10)                   //最大空闲连接数
+// 	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
+// 	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
 
-	if err != nil {
-		log.Println(err.Error())
-	}
+// 	// defer sqlDirver.Close()
 
-	sqlDirver.SetMaxIdleConns(10)                   //最大空闲连接数
-	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
-	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
+// 	SetupDatabase(db)
+// }
 
-	// defer sqlDirver.Close()
+// func NewConn() *gorm.DB {
 
-	SetupDatabase(db)
-}
+// 	_pg_config := godriver.POSTGRES{
+// 		Name:        "postgres",
+// 		User:        "postgres",
+// 		Host:        "localhost",
+// 		Password:    "example",
+// 		Port:        "5432",
+// 		TablePrefix: "test_",
+// 		SSLMODE:     "disable",
+// 	}
 
-func NewConn() *gorm.DB {
+// 	return _pg_config.NewConnection()
 
-	_pg_config := godriver.POSTGRES{
-		Name:        "postgres",
-		User:        "postgres",
-		Host:        "localhost",
-		Password:    "example",
-		Port:        "5432",
-		TablePrefix: "test_",
-		SSLMODE:     "disable",
-	}
+// }
 
-	return _pg_config.NewConnection()
+// /**
+//  * GetDB
+//  */
+// func GetDB() *gorm.DB {
 
-}
+// 	sqlDirver, err := db.DB()
 
-/**
- * GetDB
- */
-func GetDB() *gorm.DB {
+// 	if err != nil {
+// 		log.Println(err.Error())
+// 	}
 
-	sqlDirver, err := db.DB()
+// 	if err := sqlDirver.Ping(); err != nil {
+// 		sqlDirver.Close()
+// 		db = NewConn()
+// 	}
+// 	return db
+// }
 
-	if err != nil {
-		log.Println(err.Error())
-	}
+// /*
+// setupDatabase 为了使用一些常用组建
+// */
+// func SetupDatabase(db *gorm.DB) {
+// 	db.Exec("create extension IF NOT EXISTS hstore;")
+// 	// 为了使用uuid
+// 	db.Exec("create extension IF NOT EXISTS \"uuid-ossp\"")
+// 	err := db.AutoMigrate(ModelWithHistory...)
 
-	if err := sqlDirver.Ping(); err != nil {
-		sqlDirver.Close()
-		db = NewConn()
-	}
-	return db
-}
-
-/*
-setupDatabase 为了使用一些常用组建
-*/
-func SetupDatabase(db *gorm.DB) {
-	db.Exec("create extension IF NOT EXISTS hstore;")
-	// 为了使用uuid
-	db.Exec("create extension IF NOT EXISTS \"uuid-ossp\"")
-	err := db.AutoMigrate(ModelWithHistory...)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-}
+// 	if err != nil {
+// 		log.Fatal(err.Error())
+// 	}
+// }

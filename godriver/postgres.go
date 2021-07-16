@@ -14,7 +14,7 @@ var (
 )
 
 func SetUp() {
-	db = NewConnection()
+	db = NewPostgresConnection()
 
 	sqlDirver, err := db.DB()
 
@@ -42,7 +42,7 @@ func GetDB() *gorm.DB {
 
 	if err := sqlDirver.Ping(); err != nil {
 		sqlDirver.Close()
-		db = NewConnection()
+		db = NewPostgresConnection()
 	}
 	return db
 }

@@ -1,13 +1,7 @@
 package sample
 
 import (
-	"fmt"
 	"math/rand"
-	"testing"
-	"time"
-
-	"github.com/gofrs/uuid"
-	"gorm.io/gorm/clause"
 )
 
 func RandomString(n int) string {
@@ -29,29 +23,29 @@ func NonceStr() string {
 	return RandomString(32)
 }
 
-func Test_demo(t *testing.T) {
-	_db := GetDB()
+// func Test_demo(t *testing.T) {
+// 	_db := GetDB()
 
-	for {
-		_uid, _ := uuid.NewV4()
+// 	for {
+// 		_uid, _ := uuid.NewV4()
 
-		_name := NonceStr()
-		_new_user := UserInfo{
-			ID:        _uid,
-			Name:      _name,
-			CreatedAt: time.Now().Local(),
-		}
+// 		_name := NonceStr()
+// 		_new_user := UserInfo{
+// 			ID:        _uid,
+// 			Name:      _name,
+// 			CreatedAt: time.Now().Local(),
+// 		}
 
-		// 更新用户字段
-		_db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "id"}},              // key colume
-			DoUpdates: clause.AssignmentColumns([]string{"name"}), // column needed to be updated
-		}).Create(&_new_user)
+// 		// 更新用户字段
+// 		_db.Clauses(clause.OnConflict{
+// 			Columns:   []clause.Column{{Name: "id"}},              // key colume
+// 			DoUpdates: clause.AssignmentColumns([]string{"name"}), // column needed to be updated
+// 		}).Create(&_new_user)
 
-		fmt.Println("db commit")
+// 		fmt.Println("db commit")
 
-		time.Sleep(time.Second)
+// 		time.Sleep(time.Second)
 
-	}
+// 	}
 
-}
+// }

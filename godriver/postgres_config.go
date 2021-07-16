@@ -76,7 +76,7 @@ func (p *POSTGRES) NewConnection() *gorm.DB {
  * NewConnection
  * 初始化 链接
  */
-func NewConnection() *gorm.DB {
+func NewPostgresConnection() *gorm.DB {
 	_pg_config := NewPOSTGRES() // 初始化 pg
 	_db := _pg_config.NewConnection()
 
