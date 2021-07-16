@@ -1,4 +1,4 @@
-package godriver
+package postgres
 
 import (
 	"fmt"

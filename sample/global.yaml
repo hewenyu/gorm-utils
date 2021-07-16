@@ -1,0 +1,19 @@
+kafka: 
+  host: kafka1:9092
+  logtag: monitor_service_provider
+
+mysql:
+  host: leather
+  port: denim
+  user: user
+  password: password
+  table: dev_
+  parsetime: True
+  loc: Local
+
+
+redis:
+  host: redis-host
+  port: redis-port
+  password: redis-password
+  db : 0

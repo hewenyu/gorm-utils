@@ -1,4 +1,4 @@
-package godriver
+package mysql
 
 import (
 	"fmt"
