@@ -1,10 +1,10 @@
-package mysql
+package postgres
 
 import (
 	"log"
+	"time"
 
 	"github.com/hewenyu/gorm-utils/sample"
-	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -13,17 +13,38 @@ var (
 	modelWithHistory = []interface{}{&sample.UserInfo{}}
 )
 
-func NewConn() *gorm.DB {
-	_pg_config := MYSQL{
-		Name:        viper.GetString("mysql.name"),
-		Password:    viper.GetString("mysql.password"),
-		User:        viper.GetString("mysql.user"),
-		Host:        viper.GetString("mysql.host"),
-		TablePrefix: viper.GetString("mysql.table"),     // defult dev_
-		ParseTime:   viper.GetString("mysql.parsetime"), // defult True
-		Loc:         viper.GetString("mysql.loc"),       // defult Local
+func init() {
+
+	db = NewConn()
+	sqlDirver, err := db.DB()
+
+	if err != nil {
+		log.Println(err.Error())
 	}
+
+	sqlDirver.SetMaxIdleConns(10)                   //最大空闲连接数
+	sqlDirver.SetMaxOpenConns(30)                   //最大连接数
+	sqlDirver.SetConnMaxLifetime(time.Second * 300) //设置连接空闲超时
+
+	// defer sqlDirver.Close()
+
+	SetupDatabase(db)
+}
+
+func NewConn() *gorm.DB {
+
+	_pg_config := POSTGRES{
+		Name:        "postgres",
+		User:        "postgres",
+		Host:        "localhost",
+		Password:    "example",
+		Port:        "5432",
+		TablePrefix: "test_",
+		SSLMODE:     "disable",
+	}
+
 	return _pg_config.NewConnection()
+
 }
 
 /**
